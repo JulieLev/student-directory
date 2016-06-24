@@ -28,8 +28,8 @@ def print(students)
   #only = students.select {|k,v| v.to_s.start_with?("B")}
   students.each_with_index do |student, i|
     n = i + 1
-    name = student[:name].to_s
-    cohort = student[:cohort]
+    name = student[:name].capitalize
+    cohortstr = student[:cohort].to_s.capitalize.center(10)
   # if name starts with b...
     #if name.downcase.start_with?("b")
     #  puts "#{n} #{name} (#{cohort} cohort)"
@@ -38,7 +38,7 @@ def print(students)
     #if name.length <12
     #  puts "#{n} #{name} (#{cohort} cohort)"
     #end
-    puts "#{n} #{name} (#{cohort} cohort)"
+    puts "#{n} #{name.center(30)} #{cohortstr}"
     end #end of each
 end #end of print
 
