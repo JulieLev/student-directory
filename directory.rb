@@ -6,11 +6,16 @@ def input_students
   students = []
   # get the first name
   name = gets.chomp
-  # while the name is not empty, repeat this code
+      # while the name is not empty, repeat this code
   while !name.empty? do
+    # get the cohort
+    puts "Which cohort does #{name} belong to? Please enter the full month name e.g. November"
+    cohortlabel = gets.chomp.to_sym
+
     # add the student hash to the array
-    students << {name: name, cohort: :november, hobbies:[], country:"Not known", height_m: "Not known"}
+    students << {name: name, cohort: cohortlabel, hobbies:[], country:"Not known", height_m: "Not known"}
     puts "Now we have #{students.count} students."
+    puts "Please enter the name of the next one or hit Return twice to finish."
     # get another name from the user
     name = gets.chomp
   end
