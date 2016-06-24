@@ -27,7 +27,9 @@ def print(students)
   #only = students.select {|k,v| v.to_s.start_with?("B")}
 
   students.each_with_index do |student, i|
+    n = i + 1
     name = student[:name].to_s
+    cohort = student[:cohort]
   # if name starts with b...
     #if name.downcase.start_with?("b")
     #  puts "#{i + 1} #{student[:name]} (#{student[:cohort]} cohort)"
@@ -36,9 +38,10 @@ def print(students)
     #if name.length <12
     #  puts "#{i + 1} #{student[:name]} (#{student[:cohort]} cohort)"
     #end
-    puts "#{i + 1} #{name} (#{student[:cohort]} cohort)"
+
+    puts "#{n} #{name} (#{cohort} cohort)"
     end #end of each
-  
+
 end #end of print
 
 def print_footer(names)
