@@ -24,8 +24,17 @@ def print_header
 end
 
 def print(students)
+  #only = students.select {|k,v| v.to_s.start_with?("B")}
   students.each_with_index do |student, i|
-    puts "#{i + 1} #{student[:name]} (#{student[:cohort]} cohort)"
+    name = student[:name].to_s
+    # if name starts with b...
+    if name.downcase.start_with?("b")
+      puts "#{i + 1} #{student[:name]} (#{student[:cohort]} cohort)"
+    end
+    #if name is shorter than 12 characters
+    if name.length <12
+      puts "#{i + 1} #{student[:name]} (#{student[:cohort]} cohort)"
+    end
   end
 end
 
