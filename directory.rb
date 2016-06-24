@@ -48,11 +48,15 @@ end
 def print(students)
   n = 1
   count = students.count
-
+ 
   while n <= count
-    students.map do |student|
-      name = student[:name]
-      cohortstr = student[:cohort].to_s.capitalize
+    #array.map{|x| x[:price]}
+    #array.uniq { |e| e[:name] }
+    #by_cohort = students.uniq{|cohort| cohort[:cohort]}
+            
+    name = student[:name]
+    cohortstr = student[:cohort].to_s.capitalize
+    
   # if name starts with b...
     #if name.downcase.start_with?("b")
     #  puts "#{n} #{name} #{cohortstr}"
@@ -61,17 +65,37 @@ def print(students)
     #if name.length <12
     #  puts "#{n} #{name} #{cohortstr}"
     #end
-      puts "#{n.to_s.center(4)} #{name.ljust(30)} #{cohortstr}"
-      n += 1
+
+    puts "#{n.to_s.center(4)} #{name.ljust(30)} #{cohortstr}"
+    n += 1
+      
     end #end of map
+        
   end #end of while
 end #end of print
 
+def print_by_cohort(students)
+    cohort_month = []
+    puts "See by specific cohort month? - Enter Full Month Please"
+    month = STDIN.gets.chomp.capitalize
+      @students.map do |student|
+        if student[:cohort] == month
+          cohort_month << student
+      end
+    end
+    print_students(cohort_month)
+end  
+  
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students"
+  if student.count == 1
+      puts "Overall we have #{students.count} great student"
+    else
+      puts "Overall we have #{students.count} great students"
+    end
 end
 
 students = input_students
 print_header
-print(students)
+#print(students)
+print_by_cohort (students)
 print_footer(students)
