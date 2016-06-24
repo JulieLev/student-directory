@@ -1,3 +1,4 @@
+
 def input_students
   puts "Please enter the names of the students:"
   puts "To finish, just hit return twice"
@@ -8,7 +9,7 @@ def input_students
   # while the name is not empty, repeat this code
   while !name.empty? do
     # add the student hash to the array
-    students << {name: name, cohort: :november}
+    students << {name: name, cohort: :november, hobbies:[], country:"Not known", height_m: "Not known"}
     puts "Now we have #{students.count} students"
     # get another name from the user
     name = gets.chomp
@@ -25,23 +26,20 @@ end
 
 def print(students)
   #only = students.select {|k,v| v.to_s.start_with?("B")}
-
   students.each_with_index do |student, i|
     n = i + 1
     name = student[:name].to_s
     cohort = student[:cohort]
   # if name starts with b...
     #if name.downcase.start_with?("b")
-    #  puts "#{i + 1} #{student[:name]} (#{student[:cohort]} cohort)"
+    #  puts "#{n} #{name} (#{cohort} cohort)"
     #end
   #if name is shorter than 12 characters
     #if name.length <12
-    #  puts "#{i + 1} #{student[:name]} (#{student[:cohort]} cohort)"
+    #  puts "#{n} #{name} (#{cohort} cohort)"
     #end
-
     puts "#{n} #{name} (#{cohort} cohort)"
     end #end of each
-
 end #end of print
 
 def print_footer(names)
