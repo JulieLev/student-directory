@@ -1,7 +1,7 @@
 
 def input_students
   puts "Please enter the names of the students:"
-  puts "To finish, just hit return twice"
+  puts "To finish, just hit return twice."
   # create an empty array
   students = []
   # get the first name
@@ -10,7 +10,7 @@ def input_students
   while !name.empty? do
     # add the student hash to the array
     students << {name: name, cohort: :november, hobbies:[], country:"Not known", height_m: "Not known"}
-    puts "Now we have #{students.count} students"
+    puts "Now we have #{students.count} students."
     # get another name from the user
     name = gets.chomp
   end
@@ -25,21 +25,25 @@ def print_header
 end
 
 def print(students)
-  #only = students.select {|k,v| v.to_s.start_with?("B")}
-  students.each_with_index do |student, i|
-    n = i + 1
-    name = student[:name].capitalize
-    cohortstr = student[:cohort].to_s.capitalize.center(10)
+  n = 1
+  count = students.count
+
+  while n <= count
+    students.map do |student|
+      name = student[:name]
+      cohortstr = student[:cohort].to_s.capitalize
   # if name starts with b...
     #if name.downcase.start_with?("b")
-    #  puts "#{n} #{name} (#{cohort} cohort)"
+    #  puts "#{n} #{name} #{cohortstr}"
     #end
   #if name is shorter than 12 characters
     #if name.length <12
-    #  puts "#{n} #{name} (#{cohort} cohort)"
+    #  puts "#{n} #{name} #{cohortstr}"
     #end
-    puts "#{n} #{name.center(30)} #{cohortstr}"
-    end #end of each
+      puts "#{n.to_s.center(4)} #{name.ljust(30)} #{cohortstr}"
+      n += 1
+    end #end of map
+  end #end of while
 end #end of print
 
 def print_footer(names)
