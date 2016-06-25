@@ -1,7 +1,10 @@
 
 @students = [] # an empty array accessible to all methods
+@file = "students.csv" #default name of the currently selected file
 
 def input_students
+  puts "You are currently linked to #{@file}."
+  puts "If you wish to switch files first, press Return twice and select 3 from the menu."
   puts "Please enter the names of the students:"
   puts "To finish, just hit return twice."
   # create an empty array
@@ -43,24 +46,37 @@ def input_students
       puts "Now we have #{@students.count} students."
     end #end if
 
-    puts "Please enter the name of the next one or hit Return twice to finish."
+    puts "Please enter the name of the next student or hit Return twice to finish."
     # get another name from the user
     name = STDIN.gets.chomp  #gets.gsub(/\n/,”")
   end #end first while
-  # return the array of students
+  puts "Would you like to save these students to the file now? Please enter Y or N."
+  r = gets.chomp.upcase
+  if r == "Y"
+    save_students
+  end
   #return students
 end
 
 def save_students
   # open the file for writing
-  file = File.open("students.csv", "w")
+  puts "You are currently linked to #{@file}."
+  puts "Is this correct? Enter Y if so or N to change the file."
+  r = gets.chomp.upcase
+  if r == "N"
+    choose_file
+  end
+
+  filetemp = File.open(@file, "w")
   # iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
-    file.puts csv_line
-  end
-  file.close
+    filetemp.puts csv_line
+  end #end do
+  filetemp.close
+  puts File.exists?(@file) ? "The students have been saved to
+  the file." : "The file has not been saved successfully."
 end
 
 def print_header
@@ -70,13 +86,14 @@ end
 
 def print_students_list
   count = @students.count
-  if count ==0
+  if count == 0
     puts "There are no students to print.".center(40)
-    exit
+    puts #line spacer
+    interactive_menu
   else
 
   n = 1
-  while n < count
+  while n <= count
   @students.map do |student|
       name = student[:name]
       cohortstr = student[:cohort].to_s.capitalize
@@ -97,18 +114,113 @@ def print_footer
   puts # spacer line
 end
 
-=begin
-    cohort_month = []
-    puts "See by specific cohort month? - Enter Full Month Please"
-    month = STDIN.gets.chomp.capitalize
-      @students.map do |student|
-        if student[:cohort] == month
-          cohort_month << student
-      end
+def interactive_menu
+  loop do
+    print_menu
+    process(STDIN.gets.chomp)
+  end
+end
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "3. Save the list to #{@file} file"
+  puts "4. Load the list from #{@file} file"
+  puts "5. Choose a file to load"
+  puts "9. Exit" # 9 because we'll be adding more items
+end
+
+def show_students
+  print_header
+  print_students_list
+  print_footer
+end
+
+def load_students(filename = @file)
+  @students = []
+  filetemp = File.open(filename, "r")
+  filetemp.readlines.each do |line|
+    name, cohort = line.chomp.split(',')
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+  filetemp.close
+end
+
+def choose_file
+  puts "Please enter the name of the file you wish to use:"
+  filenew = gets.chomp.downcase
+  if File.exists?(filenew)
+    @file = filenew
+    load_students #(filenew)
+  else
+    puts "Sorry, I can't find that file."
+  end
+end
+
+def try_load_students
+  filename = ARGV.first # first argument from the command line
+  if filename.nil?
+    if File.exists?(@file)
+      filename = @file
+      load_students
+      puts "Loaded #{@students.count} from #{@file}"
+    else # if it doesn't exist
+      puts "Sorry, #{filename} doesn't exist."
+      exit # quit the program
     end
-   print_students(cohort_month)
-   end
-=end
+  end
+end
+
+def process(selection)
+  case selection
+    when "1"
+      input_students
+    when "2"
+      show_students
+    when "3"
+      save_students
+    when "4"
+      load_students
+    when "5"
+      choose_file
+    when "9"
+      exit
+    else
+      puts "I don't know what you mean, try again"
+  end
+end
+
+#print the students from a specific cohort.
+def cohorts_print #students #, existing_cohorts
+  puts "Students grouped by cohort:"
+  puts #spacer line
+  existing_cohorts = []
+  existing_cohorts = @students.map {|student| student[:cohort]}.sort.uniq
+   for i in (0..existing_cohorts.length-1)
+      @students.map do |student|
+        if student[:cohort] == existing_cohorts[i]
+          cohortstr = student[:cohort].to_s.capitalize + " Cohort"
+          puts "#{cohortstr.ljust(20)} #{student[:name]} "
+        end #end if
+      end #end do
+   end #end for
+  #cohorts
+end #end default
+
+#to print list of students whose names are < 12 characters
+def print_less_than_12
+  puts "Students with names shorter than 12 characters are:"
+  @students.map do |student|
+    name = student[:name]
+    cohortstr = student[:cohort].to_s.capitalize
+
+  #if name is shorter than 12 characters
+    if name.length <12
+      puts "#{name.ljust(30)} #{cohortstr}"
+    end
+    end #end of do
+  puts #spacer line
+end #end of print_less_than_12
 
 #to print students whose names begin with an input letter
 def print_letter
@@ -127,96 +239,24 @@ def print_letter
   puts #to print spacer line
 end #end of print_letter
 
-#to print list of students whose names are < 12 characters
-def print_less_than_12
-  puts "Students with names shorter than 12 characters are:"
-  @students.map do |student|
-    name = student[:name]
-    cohortstr = student[:cohort].to_s.capitalize
-
-  #if name is shorter than 12 characters
-    if name.length <12
-      puts "#{name.ljust(30)} #{cohortstr}"
-    end
-    end #end of do
-  puts #spacer line
-end #end of print_less_than_12
-
-#print the students from a specific cohort.
-def cohorts_print #students #, existing_cohorts
-  puts "Students grouped by cohort:"
-  puts #spacer line
-  existing_cohorts = []
-  existing_cohorts = @students.map {|student| student[:cohort]}.sort.uniq
-   for i in (0..existing_cohorts.length-1)
+=begin
+    cohort_month = []
+    puts "See by specific cohort month? - Enter Full Month Please"
+    month = STDIN.gets.chomp.capitalize
       @students.map do |student|
-        if student[:cohort] == existing_cohorts[i]
-          cohortstr = student[:cohort].to_s.capitalize + " Cohort"
-          puts "#{cohortstr.ljust(20)} #{student[:name]} "
-        end #end if
-      end #end do
-   end #end for
-  #cohorts
-end #end def
+        if student[:cohort] == month
+          cohort_month << student
+      end
+    end
+   print_students(cohort_month)
+   end
+=end
 
-def interactive_menu
-  loop do
-    print_menu
-    process(STDIN.gets.chomp)
-  end
-end
 
-def print_menu
-  puts "1. Input the students"
-  puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv file"
-  puts "9. Exit" # 9 because we'll be adding more items
-end
 
-def show_students
-  print_header
-  print_students_list
-  print_footer
-end
 
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
-  end
-  file.close
-end
 
-def try_load_students
-  filename = ARGV.first # first argument from the command line
-  return if filename.nil? # get out of the method if it isn't given
-  if File.exists?(filename) # if it exists
-    load_students(filename)
-     puts "Loaded #{@students.count} from #{filename}"
-  else # if it doesn't exist
-    puts "Sorry, #{filename} doesn't exist."
-    exit # quit the program
-  end
-end
 
-def process(selection)
-  case selection
-    when "1"
-      input_students
-    when "2"
-      show_students
-    when "3"
-      save_students
-    when "4"
-      load_students
-    when "9"
-      exit
-    else
-      puts "I don't know what you mean, try again"
-  end
-end
 
 try_load_students
 interactive_menu
