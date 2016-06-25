@@ -12,7 +12,8 @@ def input_students
     while m == false
       puts "Which cohort does #{name} belong to? Please enter the month name."
       cohortlabel = gets.chomp
-      months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+      months = ["january", "february", "march", "april", "may", "june",
+        "july", "august", "september", "october", "november", "december"]
       #check for typos
       if months.include?(cohortlabel)
         m = true
@@ -28,7 +29,8 @@ def input_students
     cohortlabel = cohortlabel.to_sym
 
     # add the student hash to the array
-    students << {name: name, cohort: cohortlabel, hobbies:[], country:"Not known", height_m: "Not known"}
+    students << {name: name, cohort: cohortlabel, hobbies:[],
+      country:"Not known", height_m: "Not known"}
 
     if students.count == 1
       puts "Now we have #{students.count} student."
@@ -45,8 +47,8 @@ def input_students
 end
 
 def print_header
-  puts "The students of Villains Academy".center(70)
-  puts "-------------".center(70)
+  puts "The students of Villains Academy".center(40)
+  puts "-------------".center(40)
 end
 
 def print(students)
@@ -62,7 +64,7 @@ def print(students)
   end #end of while
 end #end of print
 
-def print_footer(names)
+def print_footer(students)
   if students.count == 1
    puts "Overall we have #{students.count} great student."
   else
@@ -141,7 +143,7 @@ end #end def
 
 students = input_students
 print_header
-print(students)
+print students
 #print_cohorts #students existing_students
 #print_by_cohort (students)
 print_footer(students)
