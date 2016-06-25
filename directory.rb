@@ -8,14 +8,14 @@ def input_students
   #students = []
   # get the first name
   #name = gets.gsub(/\n/,”")
-  name = gets.chomp
+  name = STDIN.gets.chomp
       # while the name is not empty, repeat this code
   while !name.empty? do
     # get the cohort
     m = false
     while m == false
       puts "Which cohort does #{name} belong to? Please enter the month name."
-      cohortlabel = gets.chomp
+      cohortlabel = STDIN.gets.chomp
       months = ["january", "february", "march", "april", "may", "june",
         "july", "august", "september", "october", "november", "december"]
       #check for typos
@@ -45,7 +45,7 @@ def input_students
 
     puts "Please enter the name of the next one or hit Return twice to finish."
     # get another name from the user
-    name = gets.chomp  #gets.gsub(/\n/,”")
+    name = STDIN.gets.chomp  #gets.gsub(/\n/,”")
   end #end first while
   # return the array of students
   #return students
@@ -162,7 +162,7 @@ end #end def
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -180,13 +180,25 @@ def show_students
   print_footer
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
-  name, cohort = line.chomp.split(',')
+    name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
   end
   file.close
+end
+
+def try_load_students
+  filename = ARGV.first # first argument from the command line
+  return if filename.nil? # get out of the method if it isn't given
+  if File.exists?(filename) # if it exists
+    load_students(filename)
+     puts "Loaded #{@students.count} from #{filename}"
+  else # if it doesn't exist
+    puts "Sorry, #{filename} doesn't exist."
+    exit # quit the program
+  end
 end
 
 def process(selection)
@@ -206,13 +218,12 @@ def process(selection)
   end
 end
 
+try_load_students
 interactive_menu
 #students = input_students
 #print_header
 #print(students)
 #print_footer(students)
-=begin
-print_letter(students)
-print_less_than_12(students)
-cohorts_print students
-=end
+#print_letter(students)
+#print_less_than_12(students)
+#cohorts_print students
