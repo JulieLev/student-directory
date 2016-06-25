@@ -5,7 +5,7 @@ def input_students
   puts "Please enter the names of the students:"
   puts "To finish, just hit return twice."
   # create an empty array
-  students = []
+  #students = []
   # get the first name
   #name = gets.gsub(/\n/,”")
   name = gets.chomp
@@ -33,13 +33,13 @@ def input_students
     cohortlabel = cohortlabel.to_sym
 
     # add the student hash to the array
-    students << {name: name, cohort: cohortlabel, hobbies:[],
+    @students << {name: name, cohort: cohortlabel, hobbies:[],
       country:"Not known", height_m: "Not known"}
 
-    if students.count == 1
-      puts "Now we have #{students.count} student."
+    if @students.count == 1
+      puts "Now we have #{@students.count} student."
     else
-      puts "Now we have #{students.count} students."
+      puts "Now we have #{@students.count} students."
     end #end if
 
     puts "Please enter the name of the next one or hit Return twice to finish."
@@ -47,7 +47,7 @@ def input_students
     name = gets.chomp  #gets.gsub(/\n/,”")
   end #end first while
   # return the array of students
-  return students
+  #return students
 end
 
 def print_header
@@ -56,7 +56,7 @@ def print_header
 end
 
 def print_students_list
-  count = students.count
+  count = @students.count
   if count ==0
     puts "There are no students to print.".center(40)
     exit
@@ -64,7 +64,7 @@ def print_students_list
 
   n = 1
   while n < count
-  students.map do |student|
+  @students.map do |student|
       name = student[:name]
       cohortstr = student[:cohort].to_s.capitalize
       puts "#{n.to_s.center(4)} #{name.ljust(30)} #{cohortstr}"
@@ -75,11 +75,11 @@ puts #spacer line
   end #end if
 end #end of print
 
-def print_footer(students)
-  if students.count == 1
-   puts "Overall we have #{students.count} great student.".center(40)
+def print_footer
+  if @students.count == 1
+   puts "Overall we have #{@students.count} great student.".center(40)
   else
-   puts "Overall we have #{students.count} great students.".center(40)
+   puts "Overall we have #{@students.count} great students.".center(40)
   end
   puts # spacer line
 end
@@ -98,11 +98,11 @@ end
 =end
 
 #to print students whose names begin with an input letter
-def print_letter(students)
+def print_letter
     puts "Please enter a letter to select students' names:"
     l = gets.chomp
 
-    students.each do |student|
+    @students.each do |student|
     name = student[:name]
     cohortstr = student[:cohort].to_s.capitalize
     #if name starts with...
@@ -115,9 +115,9 @@ def print_letter(students)
 end #end of print_letter
 
 #to print list of students whose names are < 12 characters
-def print_less_than_12(students)
+def print_less_than_12
   puts "Students with names shorter than 12 characters are:"
-  students.map do |student|
+  @students.map do |student|
     name = student[:name]
     cohortstr = student[:cohort].to_s.capitalize
 
@@ -130,13 +130,13 @@ def print_less_than_12(students)
 end #end of print_less_than_12
 
 #print the students from a specific cohort.
-def cohorts_print students #, existing_cohorts
+def cohorts_print #students #, existing_cohorts
   puts "Students grouped by cohort:"
   puts #spacer line
   existing_cohorts = []
-  existing_cohorts = students.map {|student| student[:cohort]}.sort.uniq
+  existing_cohorts = @students.map {|student| student[:cohort]}.sort.uniq
    for i in (0..existing_cohorts.length-1)
-      students.map do |student|
+      @students.map do |student|
         if student[:cohort] == existing_cohorts[i]
           cohortstr = student[:cohort].to_s.capitalize + " Cohort"
           puts "#{cohortstr.ljust(20)} #{student[:name]} "
