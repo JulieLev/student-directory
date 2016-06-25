@@ -1,4 +1,3 @@
-
 def input_students
   puts "Please enter the names of the students:"
   puts "To finish, just hit return twice."
@@ -13,7 +12,8 @@ def input_students
     while m == false
       puts "Which cohort does #{name} belong to? Please enter the month name."
       cohortlabel = gets.chomp
-      months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+      months = ["january", "february", "march", "april", "may", "june",
+        "july", "august", "september", "october", "november", "december"]
       #check for typos
       if months.include?(cohortlabel)
         m = true
@@ -29,52 +29,52 @@ def input_students
     cohortlabel = cohortlabel.to_sym
 
     # add the student hash to the array
-    students << {name: name, cohort: cohortlabel, hobbies:[], country:"Not known", height_m: "Not known"}
-    puts "Now we have #{students.count} students."
+    students << {name: name, cohort: cohortlabel, hobbies:[],
+      country:"Not known", height_m: "Not known"}
+
+    if students.count == 1
+      puts "Now we have #{students.count} student."
+    else
+      puts "Now we have #{students.count} students."
+    end #end if
+
     puts "Please enter the name of the next one or hit Return twice to finish."
     # get another name from the user
-    name = gets.chomp
- end #end first while
+    name = gets.chomp  #gets.gsub(/\n/,”")
+  end #end first while
   # return the array of students
-  students
+  return students
 end
 
-
 def print_header
-  puts "The students of Villains Academy"
-  puts "-------------"
+  puts "The Students of Villains Academy".center(40)
+  puts "-------------".center(40)
 end
 
 def print(students)
-  n = 1
   count = students.count
- 
-  while n <= count
-    #array.map{|x| x[:price]}
-    #array.uniq { |e| e[:name] }
-    #by_cohort = students.uniq{|cohort| cohort[:cohort]}
-            
-    name = student[:name]
-    cohortstr = student[:cohort].to_s.capitalize
-    
-  # if name starts with b...
-    #if name.downcase.start_with?("b")
-    #  puts "#{n} #{name} #{cohortstr}"
-    #end
-  #if name is shorter than 12 characters
-    #if name.length <12
-    #  puts "#{n} #{name} #{cohortstr}"
-    #end
-
-    puts "#{n.to_s.center(4)} #{name.ljust(30)} #{cohortstr}"
-    n += 1
-      
-    end #end of map
-        
+  n = 1
+  while n < count
+  students.map do |student|
+      name = student[:name]
+      cohortstr = student[:cohort].to_s.capitalize
+      puts "#{n.to_s.center(4)} #{name.ljust(30)} #{cohortstr}"
+      n +=1
+      end #end of map do
   end #end of while
+puts #spacer line
 end #end of print
 
-def print_by_cohort(students)
+def print_footer(students)
+  if students.count == 1
+   puts "Overall we have #{students.count} great student.".center(40)
+  else
+   puts "Overall we have #{students.count} great students.".center(40)
+  end
+  puts # spacer line
+end
+
+=begin
     cohort_month = []
     puts "See by specific cohort month? - Enter Full Month Please"
     month = STDIN.gets.chomp.capitalize
@@ -83,19 +83,66 @@ def print_by_cohort(students)
           cohort_month << student
       end
     end
-    print_students(cohort_month)
-end  
-  
-def print_footer(names)
-  if student.count == 1
-      puts "Overall we have #{students.count} great student"
-    else
-      puts "Overall we have #{students.count} great students"
+   print_students(cohort_month)
+   end
+=end
+
+#to print students whose names begin with an input letter
+def print_letter(students)
+    puts "Please enter a letter to select students' names:"
+    l = gets.chomp
+
+    students.each do |student|
+    name = student[:name]
+    cohortstr = student[:cohort].to_s.capitalize
+    #if name starts with...
+     if name.downcase.start_with?(l)
+      puts "Students whose names beginning with #{l} are:"
+      puts "#{name.ljust(30)} #{cohortstr}"
+     end #end of if
+    end #end of do
+  puts #to print spacer line
+end #end of print_letter
+
+#to print list of students whose names are < 12 characters
+def print_less_than_12(students)
+  puts "Students with names shorter than 12 characters are:"
+  students.map do |student|
+    name = student[:name]
+    cohortstr = student[:cohort].to_s.capitalize
+
+  #if name is shorter than 12 characters
+    if name.length <12
+      puts "#{name.ljust(30)} #{cohortstr}"
     end
-end
+    end #end of do
+  puts #spacer line
+end #end of print_less_than_12
+
+#print the students from a specific cohort.
+def cohorts_print students #, existing_cohorts
+  puts "Students grouped by cohort:"
+  puts #spacer line
+  existing_cohorts = []
+  existing_cohorts = students.map {|student| student[:cohort]}.sort.uniq
+   for i in (0..existing_cohorts.length-1)
+      students.map do |student|
+        if student[:cohort] == existing_cohorts[i]
+          cohortstr = student[:cohort].to_s.capitalize + " Cohort"
+          puts "#{cohortstr.ljust(20)} #{student[:name]} "
+        end #end if
+      end #end do
+   end #end for
+  #cohorts
+end #end def
+
+
+
 
 students = input_students
 print_header
-#print(students)
-print_by_cohort (students)
+print(students)
 print_footer(students)
+print_letter(students)
+print_less_than_12(students)
+cohorts_print students
