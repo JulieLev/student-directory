@@ -4,6 +4,7 @@ def input_students
   # create an empty array
   students = []
   # get the first name
+  #name = gets.gsub(/\n/,”")
   name = gets.chomp
       # while the name is not empty, repeat this code
   while !name.empty? do
@@ -53,6 +54,11 @@ end
 
 def print(students)
   count = students.count
+  if count ==0
+    puts "There are no students to print.".center(40)
+    exit
+  else
+
   n = 1
   while n < count
   students.map do |student|
@@ -63,6 +69,7 @@ def print(students)
       end #end of map do
   end #end of while
 puts #spacer line
+  end #end if
 end #end of print
 
 def print_footer(students)
@@ -140,9 +147,13 @@ end #end def
 
 
 students = input_students
+
+
 print_header
 print(students)
 print_footer(students)
+=begin
 print_letter(students)
 print_less_than_12(students)
 cohorts_print students
+=end
