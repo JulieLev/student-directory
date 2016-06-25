@@ -2,6 +2,55 @@
 @students = [] # an empty array accessible to all methods
 @file = "students.csv" #default name of the currently selected file
 
+def try_load_students
+  filename = ARGV.first # first argument from the command line
+  if filename.nil?
+    if File.exists?(@file)
+      filename = @file
+      load_students
+      puts "Loaded #{@students.count} from #{@file}"
+    else # if it doesn't exist
+      puts "Sorry, #{filename} doesn't exist."
+      exit # quit the program
+    end
+  end
+end
+
+def interactive_menu
+  loop do
+    print_menu
+    process(STDIN.gets.chomp)
+  end
+end
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "3. Save the list to #{@file} file"
+  puts "4. Load the list from #{@file} file"
+  puts "5. Choose a file to load"
+  puts "9. Exit" # 9 because we'll be adding more items
+end
+
+def process(selection)
+  case selection
+    when "1"
+      input_students
+    when "2"
+      show_students
+    when "3"
+      save_students
+    when "4"
+      load_students
+    when "5"
+      choose_file
+    when "9"
+      exit
+    else
+      puts "I don't know what you mean, try again"
+  end
+end
+
 def input_students
   puts "You are currently linked to #{@file}."
   puts "If you wish to switch files first, press Return twice and select 3 from the menu."
@@ -58,25 +107,10 @@ def input_students
   #return students
 end
 
-def save_students
-  # open the file for writing
-  puts "You are currently linked to #{@file}."
-  puts "Is this correct? Enter Y if so or N to change the file."
-  r = gets.chomp.upcase
-  if r == "N"
-    choose_file
-  end
-
-  filetemp = File.open(@file, "w")
-  # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    filetemp.puts csv_line
-  end #end do
-  filetemp.close
-  puts File.exists?(@file) ? "The students have been saved to
-  the file." : "The file has not been saved successfully."
+def show_students
+  print_header
+  print_students_list
+  print_footer
 end
 
 def print_header
@@ -114,26 +148,25 @@ def print_footer
   puts # spacer line
 end
 
-def interactive_menu
-  loop do
-    print_menu
-    process(STDIN.gets.chomp)
+def save_students
+  # open the file for writing
+  puts "You are currently linked to #{@file}."
+  puts "Is this correct? Enter Y if so or N to change the file."
+  r = gets.chomp.upcase
+  if r == "N"
+    choose_file
   end
-end
 
-def print_menu
-  puts "1. Input the students"
-  puts "2. Show the students"
-  puts "3. Save the list to #{@file} file"
-  puts "4. Load the list from #{@file} file"
-  puts "5. Choose a file to load"
-  puts "9. Exit" # 9 because we'll be adding more items
-end
-
-def show_students
-  print_header
-  print_students_list
-  print_footer
+  filetemp = File.open(@file, "w")
+  # iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    filetemp.puts csv_line
+  end #end do
+  filetemp.close
+  puts File.exists?(@file) ? "The students have been saved to
+  the file." : "The file has not been saved successfully."
 end
 
 def load_students(filename = @file)
@@ -157,38 +190,8 @@ def choose_file
   end
 end
 
-def try_load_students
-  filename = ARGV.first # first argument from the command line
-  if filename.nil?
-    if File.exists?(@file)
-      filename = @file
-      load_students
-      puts "Loaded #{@students.count} from #{@file}"
-    else # if it doesn't exist
-      puts "Sorry, #{filename} doesn't exist."
-      exit # quit the program
-    end
-  end
-end
 
-def process(selection)
-  case selection
-    when "1"
-      input_students
-    when "2"
-      show_students
-    when "3"
-      save_students
-    when "4"
-      load_students
-    when "5"
-      choose_file
-    when "9"
-      exit
-    else
-      puts "I don't know what you mean, try again"
-  end
-end
+# *** Older methods not currently called ***
 
 #print the students from a specific cohort.
 def cohorts_print #students #, existing_cohorts
