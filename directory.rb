@@ -170,6 +170,7 @@ def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv file"
   puts "9. Exit" # 9 because we'll be adding more items
 end
 
@@ -177,6 +178,15 @@ def show_students
   print_header
   print_students_list
   print_footer
+end
+
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+  name, cohort = line.chomp.split(',')
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+  file.close
 end
 
 def process(selection)
@@ -187,6 +197,8 @@ def process(selection)
       show_students
     when "3"
       save_students
+    when "4"
+      load_students
     when "9"
       exit
     else
