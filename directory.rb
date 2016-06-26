@@ -98,12 +98,14 @@ def input_students
     # get another name from the user
     name = STDIN.gets.chomp  #gets.gsub(/\n/,”")
   end #end first while
+
   puts "Would you like to save these students to the file now? Please enter Y or N."
   r = gets.chomp.upcase
   if r == "Y"
     save_students
+  else
+    puts "The students were not saved to the file."
   end
-  #return students
 end
 
 def show_students
@@ -148,6 +150,10 @@ def print_footer
 end
 
 def save_students
+  if @students.empty?
+     puts "There are no outstanding students to add."
+     return
+  end
   # open the file for writing
   puts "You are currently linked to #{@file}."
   puts "Is this correct? Enter Y if so or N to change the file."
@@ -166,25 +172,27 @@ def save_students
   end # file open do
 
   puts File.exists?(@file) ? "The students have been saved to
-  the file." : "The save was not successful - the file does not exist."
+  the file #{@file}." : "The save was not successful - the file does not exist."
 end # end save_students
 
-def load_students(filename = @file)
+def load_students
   @students = []
-  filetemp = File.open(filename, "r")
-  filetemp.readlines.each do |line|
+  File.open(@file, "r") do |file|
+    file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
-  end
-  filetemp.close
-end
+    end #end do
+  end #end file.open
+puts "The current file is #{@file}."
+end #end load students
 
 def choose_file
   puts "Please enter the name of the file you wish to use:"
   filenew = gets.chomp.downcase
   if File.exists?(filenew)
     @file = filenew
-    load_students #(filenew)
+    load_students
+    puts "The current file is #{@file}."
   else
     puts "Sorry, I can't find that file."
   end
