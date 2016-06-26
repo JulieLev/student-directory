@@ -53,9 +53,8 @@ end
 
 def input_students
   puts "You are currently linked to #{@file}."
-  puts "If you wish to switch files first, press Return twice and select 3 from the menu."
   puts "Please enter the names of the students:"
-  puts "To finish, just hit return twice."
+  puts "To finish, or to cancel and change the file first, just hit return twice."
   # create an empty array
   #students = []
   # get the first name
@@ -157,17 +156,18 @@ def save_students
     choose_file
   end
 
-  filetemp = File.open(@file, "w")
-  # iterate over the array of students
-  @students.each do |student|
+  File.open(@file, "w") do |file|
+    # iterate over the array of students
+    @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
-    filetemp.puts csv_line
-  end #end do
-  filetemp.close
+    file.puts csv_line
+    end #end student do
+  end # file open do
+
   puts File.exists?(@file) ? "The students have been saved to
-  the file." : "The file has not been saved successfully."
-end
+  the file." : "The save was not successful - the file does not exist."
+end # end save_students
 
 def load_students(filename = @file)
   @students = []
