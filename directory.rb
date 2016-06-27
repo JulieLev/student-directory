@@ -52,26 +52,35 @@ def menu_action(selection)
   end
 end
 
-def link
+def show_link
   puts "You are currently linked to #{@file}."
 end
 
+def input
+  STDIN.gets.chomp 
+end
+
+def num_students
+  if @students.count == 1
+      puts "Now we have #{@students.count} student."
+    else
+      puts "Now we have #{@students.count} students."
+    end # end if
+end
+
 def input_students
-  link
+  show_link
   puts "Please enter the names of the students:"
   puts "To finish, or to cancel and change the file first, just hit return twice."
-  # create an empty array
-  # students = []
-  # get the first name
   # name = gets.gsub(/\n/,”")
-  name = STDIN.gets.chomp
-      # while the name is not empty, repeat this code
-  while !name.empty? do
+  name = input
+  # while the name is not empty, repeat this code
+  until name.empty? do
     # get the cohort
     m = false
     while m == false
       puts "Which cohort does #{name} belong to? Please enter the month name."
-      cohortlabel = STDIN.gets.chomp
+      cohortlabel = input
       months = %w[january february march april may june
         july august september october november december]
       # check for typos
@@ -92,16 +101,10 @@ def input_students
     # @students << {name: name, cohort: cohortlabel, hobbies:[],
       # country:"Not known", height_m: "Not known"}
     @students << { name: name, cohort: cohortlabel}
-
-    if @students.count == 1
-      puts "Now we have #{@students.count} student."
-    else
-      puts "Now we have #{@students.count} students."
-    end # end if
-
+    num_students
     puts "Please enter the name of the next student or hit Return twice to finish."
     # get another name from the user
-    name = STDIN.gets.chomp  # gets.gsub(/\n/,”")
+    name = input  # gets.gsub(/\n/,”")
   end # end first while
 
   puts "Would you like to save these students to the file now? Please enter Y or N."
@@ -160,7 +163,7 @@ def save_students
     return
   end
   # open the file for writing
-  link
+  show_link
   puts "Is this correct? Enter Y if so or N to change the file."
   r = gets.chomp.upcase
   if r == "N"
