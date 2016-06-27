@@ -8,7 +8,7 @@ def initial_load_students
   if filename.nil?
     if File.exist?(@file)
       filename = @file
-      load_students
+      load_students_csv
       puts "Loaded #{@students.count} from #{@file}"
     else # if it doesn't exist
       puts "Sorry, #{filename} doesn't exist."
@@ -194,7 +194,7 @@ end # end load students
 def load_students_csv
   @students = []
   CSV.foreach(@file) do |row|
-    name = row[0], cohort = row[1]
+    name = row[0]; cohort = row[1]
     @students << { name: name, cohort: cohort.to_sym}
     end # end do
   puts "The current file is #{@file}."
