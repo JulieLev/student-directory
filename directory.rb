@@ -1,13 +1,14 @@
+require 'csv'
 
 @students = [] # an empty array accessible to all methods
 @file = "students.csv" # default name of the currently selected file
 
-def try_load_students
+def initial_load_students
   filename = ARGV.first # first argument from the command line
   if filename.nil?
     if File.exist?(@file)
       filename = @file
-      load_students
+      load_students_csv
       puts "Loaded #{@students.count} from #{@file}"
     else # if it doesn't exist
       puts "Sorry, #{filename} doesn't exist."
@@ -190,6 +191,15 @@ def load_students
 puts "The current file is #{@file}."
 end # end load students
 
+def load_students_csv
+  @students = []
+  CSV.foreach('students.csv') do |row|
+    name = row[0], cohort = row[1]
+    @students << { name: name, cohort: cohort.to_sym}
+    end # end do
+  puts "The current file is #{@file}."
+end # end load_students_csv
+
 def choose_file
   puts "Please enter the name of the file you wish to use:"
   filenew = gets.chomp.downcase
@@ -268,7 +278,7 @@ end # end of print_letter
 =end
 
 
-try_load_students
+initial_load_students
 interactive_menu
 #students = input_students
 #print_header
