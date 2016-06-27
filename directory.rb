@@ -20,7 +20,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(STDIN.gets.chomp)
+    menu_action(STDIN.gets.chomp)
   end
 end
 
@@ -33,7 +33,7 @@ def print_menu
   puts "9. Exit" # 9 because we'll be adding more items
 end
 
-def process(selection)
+def menu_action(selection)
   case selection
     when "1"
       input_students
@@ -42,7 +42,7 @@ def process(selection)
     when "3"
       save_students
     when "4"
-      load_students
+      load_students_csv
     when "5"
       choose_file
     when "9"
@@ -52,8 +52,12 @@ def process(selection)
   end
 end
 
-def input_students
+def link
   puts "You are currently linked to #{@file}."
+end
+
+def input_students
+  link
   puts "Please enter the names of the students:"
   puts "To finish, or to cancel and change the file first, just hit return twice."
   # create an empty array
@@ -156,7 +160,7 @@ def save_students
     return
   end
   # open the file for writing
-  puts "You are currently linked to #{@file}."
+  link
   puts "Is this correct? Enter Y if so or N to change the file."
   r = gets.chomp.upcase
   if r == "N"
@@ -172,13 +176,37 @@ def save_students
     end # end student do
   end # file open do
 
-  if File.exists?(@file)
+  if File.exist?(@file)
     puts "The students have been saved to the file #{@file}."
   else
     "The save was not successful - the file does not exist."
   end
-
 end # end save_students
+
+def load_students_csv
+  @students = []
+  CSV.foreach(@file) do |row|
+    name = row[0]; cohort = row[1]
+    @students << { name: name, cohort: cohort.to_sym}
+    end # end do
+  puts "The current file is #{@file}."
+end # end load_students_csv
+
+def choose_file
+  puts "Please enter the name of the file you wish to use:"
+  filenew = gets.chomp.downcase
+  if File.exist?(filenew)
+    @file = filenew
+    load_students_csv
+    puts "The current file is #{@file}."
+  else
+    puts "Sorry, I can't find that file."
+  end
+end
+
+
+# *** Older methods not currently called ***
+# *** but kept for learning references ***
 
 def load_students
   @students = []
@@ -190,35 +218,6 @@ def load_students
   end # end file.open
 puts "The current file is #{@file}."
 end # end load students
-
-def load_students_csv
-  @students = []
-  CSV.foreach(@file) do |row|
-    name = row[0]; cohort = row[1]
-    @students << { name: name, cohort: cohort.to_sym}
-    end # end do
-  puts "The current file is #{@file}."
-  puts @students
-  puts
-  CSV.foreach('students.csv') do |row|
-  puts row.inspect
-  end
-end # end load_students_csv
-
-def choose_file
-  puts "Please enter the name of the file you wish to use:"
-  filenew = gets.chomp.downcase
-  if File.exist?(filenew)
-    @file = filenew
-    load_students
-    puts "The current file is #{@file}."
-  else
-    puts "Sorry, I can't find that file."
-  end
-end
-
-
-# *** Older methods not currently called ***
 
 # print the students from a specific cohort.
 def cohorts_print
