@@ -72,8 +72,8 @@ def input_students
     while m == false
       puts "Which cohort does #{name} belong to? Please enter the month name."
       cohortlabel = STDIN.gets.chomp
-      months = ["january", "february", "march", "april", "may", "june",
-        "july", "august", "september", "october", "november", "december"]
+      months = %w[january february march april may june
+        july august september october november december]
       # check for typos
       if months.include?(cohortlabel)
         m = true
