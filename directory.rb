@@ -102,7 +102,6 @@ def input_cohort name
   m = false
   while m == false
     puts "Which cohort does #{name} belong to? Please enter the month name."
-    m = true
     cohortlabel = input
     months = %w([january february march april may june
                 july august september october november december])
@@ -115,10 +114,10 @@ def input_cohort name
       m = true
     else
       puts "Please enter a valid month:"
+      m = false # m should still = false, just double checking for now!
     end # end if
 cohortlabel.to_sym
 end
-
 
 def input_students
   show_link
@@ -130,19 +129,21 @@ def input_students
   until name.empty? do
     # get the cohort
     input_cohort name
-  end # end while
-
 
 # add the student hash to the array (simple version for later exercises)
 # @students << {name: name, cohort: cohortlabel, hobbies:[]
 # country: "Not known", height_m: "Not known"}
+
     @students << { name: name, cohort: cohortlabel }
     num_students
     puts "Please enter the name of the next student or hit Return twice to finish."
     # get another name from the user
     name = input # gets.gsub(/\n/,”")
-  end # end first while
+  end # end until
+check_if_save
+end # end input_students
 
+def check_if_save
   puts "Would you like to save these students to the file now? Please enter Y or N."
   r = gets.chomp.upcase
   if r == "N"
@@ -232,11 +233,11 @@ def choose_file
   if File.exist?(filenew)
     @file = filenew
     load_students_csv
-    puts "The current file is #{@file}."
+    #puts "The current file is #{@file}."
   else
     puts "Sorry, I can't find that file."
-  end
-end
+  end # end if
+end # end choose_file
 
 # *** Older methods not currently called ***
 # *** but kept for learning references ***
