@@ -34,9 +34,9 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to #{@file} file"
-  puts "4. Load the list from #{@file} file"
-  puts "5. Choose a file to load"
+  #puts "3. Save the list to #{@file} file"
+  #puts "4. Load the list from #{@file} file"
+  puts "3. Choose a different file to load"
   puts "9. Exit" # 9 because we'll be adding more items
 end
 
@@ -47,10 +47,6 @@ def menu_action(selection)
     when "2"
       show_students
     when "3"
-      save_students
-    when "4"
-      load_students_csv
-    when "5"
       choose_file
     when "9"
       exit
@@ -66,8 +62,8 @@ end
 
 def check_link_user
   show_link
-  puts "Is this correct? Enter Y if so or N to change the file."
-  r = gets.chomp.upcase
+  puts "Is this correct? Choosing No will allow you to change the file."
+  r = yes_or_no
   if r == "N"
     choose_file
   end
@@ -110,7 +106,8 @@ def load_students_csv
     name = row[0]; cohort = row[1]
     @students << { name: name, cohort: cohort.to_sym}
     end # end do
-  puts "Loaded #{@students.count} from #{@file}"  
+  puts "Loaded #{@students.count} from #{@file}" 
+  puts #spacer row 
 end # end load_students_csv
 
 def add_to_students (name, cohort)
