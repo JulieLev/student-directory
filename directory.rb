@@ -95,11 +95,28 @@ def choose_file
 end
 
 def add_to_students (name, cohort)
-  @students << {name: name, cohort: cohort.to_sym} #, hobbies:[], country:"Not known", height_m: "Not known"  
+  @students << {name: name, cohort: cohort.to_sym} #, hobbies:[], country:"Not known", height_m: "Not known"
 end
 
-def check_months
-
+def input_cohort name
+  m = false
+  while m == false
+    puts "Which cohort does #{name} belong to? Please enter the month name."
+    m = true
+    cohortlabel = input
+    months = %w([january february march april may june
+                july august september october november december])
+    # check for typos
+    if months.include?(cohortlabel)
+      m = true
+    # check if empty
+    elsif cohortlabel.empty?
+      cohortlabel = "Unknown"
+      m = true
+    else
+      puts "Please enter a valid month:"
+    end # end if
+cohortlabel.to_sym
 end
 
 
@@ -112,25 +129,9 @@ def input_students
   # while the name is not empty, repeat this code
   until name.empty? do
     # get the cohort
-    m = false
-    while m == false
-      puts "Which cohort does #{name} belong to? Please enter the month name."
-      cohortlabel = input
-      months = %w([january february march april may june
-                  july august september october november december])
-      # check for typos
-      if months.include?(cohortlabel)
-        m = true
-      # check if empty
-      elsif cohortlabel.empty?
-        cohortlabel = "Unknown"
-        m = true
-      else
-        puts "Please enter a valid month:"
-      end # end if
-    end # end second while
+    input_cohort name
+  end # end while
 
-    cohortlabel = cohortlabel.to_sym
 
 # add the student hash to the array (simple version for later exercises)
 # @students << {name: name, cohort: cohortlabel, hobbies:[]
