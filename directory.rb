@@ -17,6 +17,10 @@ def num_students
   end # end if
 end
 
+def yes_or_no
+  puts "Please press return for Yes or type N for No."
+  gets.chomp.upcase
+end
 
 
 #*********** Menu *************
@@ -118,8 +122,8 @@ def input_cohort name
   while m == false
     puts "Which cohort does #{name} belong to? Please enter the month name."
     cohortlabel = input
-    months = %w([january february march april may june
-                july august september october november december])
+    months = %w[january february march april may june
+                july august september october november december]
     # check for typos
     if months.include?(cohortlabel)
       m = true
@@ -129,7 +133,7 @@ def input_cohort name
       m = true
     else
       puts "Please enter a valid month:"
-      m = false # m should still = false, just double checking for now!
+      #m = false # m should still = false, just double checking for now!
     end # end if
   end # end while
 cohortlabel.to_sym
@@ -137,14 +141,14 @@ end
 
 def input_students
   show_link
-  puts "Please enter the names of the students:"
+  puts "Please enter the names of the new students:"
   puts "To finish, or to cancel and change the file first, just hit return twice."
   # name = gets.gsub(/\n/,”")
   name = input
   # while the name is not empty, repeat this code
   until name.empty? do
     # get the cohort
-    input_cohort name
+    cohortlabel = input_cohort name
 
 # add the student hash to the array (simple version for later exercises)
 # @students << {name: name, cohort: cohortlabel, hobbies:[]
@@ -160,8 +164,8 @@ check_if_save
 end # end input_students
 
 def check_if_save
-  puts "Would you like to save these students to the file now? Please enter Y or N."
-  r = gets.chomp.upcase
+  puts "Would you like to save these students to the file now?" 
+  r = yes_or_no
   if r == "N"
     puts "The students were not saved to the file."
   else
