@@ -101,16 +101,12 @@ def load_if_exist
 end
 
 def load_students_csv
-  #if File.exist?(@file) 
-    @students = []
-    CSV.foreach(@file) do |row|
-      name = row[0]; cohort = row[1]
-      @students << { name: name, cohort: cohort.to_sym}
-      end # end do
-    puts "Loaded #{@students.count} from #{@file}"
-  #else
-  #   puts "There was an error loading the file."
-  #end
+  @students = []
+  CSV.foreach(@file) do |row|
+    name = row[0]; cohort = row[1]
+    @students << { name: name, cohort: cohort.to_sym}
+    end # end do
+  puts "Loaded #{@students.count} from #{@file}"  
 end # end load_students_csv
 
 def add_to_students (name, cohort)
@@ -135,6 +131,7 @@ def input_cohort name
       puts "Please enter a valid month:"
       m = false # m should still = false, just double checking for now!
     end # end if
+  end # end while
 cohortlabel.to_sym
 end
 
