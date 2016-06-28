@@ -87,26 +87,30 @@ end # end choose_file
 def initial_load_students
   filename = ARGV.first # first argument from the command line
   if filename.nil?
-    if File.exist?(@file)
+    load_if_exist
+  end
+end
+
+def load_if_exist
+  if File.exist?(@file)
       load_students_csv
     else # if it doesn't exist
       puts "Sorry, #{filename} doesn't exist."
       exit # quit the program - too drastic, needs to change!
     end
-  end
 end
 
 def load_students_csv
-  if File.exist?(@file)
+  #if File.exist?(@file) 
     @students = []
     CSV.foreach(@file) do |row|
       name = row[0]; cohort = row[1]
       @students << { name: name, cohort: cohort.to_sym}
       end # end do
     puts "Loaded #{@students.count} from #{@file}"
-  else
-     puts "There was an error loading the file."
-  end
+  #else
+  #   puts "There was an error loading the file."
+  #end
 end # end load_students_csv
 
 def add_to_students (name, cohort)
