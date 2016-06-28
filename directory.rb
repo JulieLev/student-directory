@@ -3,19 +3,6 @@ require 'csv'
 @students = [] # an empty array accessible to all methods
 @file = "students.csv" # default name of the currently selected file
 
-def initial_load_students
-  filename = ARGV.first # first argument from the command line
-  if filename.nil?
-    if File.exist?(@file)
-      load_students_csv
-      puts "Loaded #{@students.count} from #{@file}"
-    else # if it doesn't exist
-      puts "Sorry, #{filename} doesn't exist."
-      exit # quit the program
-    end
-  end
-end
-
 #********* Odds & Sods ********
 
 def input
@@ -88,11 +75,39 @@ def choose_file
   if File.exist?(filenew)
     @file = filenew
     load_students_csv
-    puts "The current file is #{@file}."
+    #puts "The current file is #{@file}."
   else
     puts "Sorry, I can't find that file."
+  end # end if
+end # end choose_file
+
+
+#******** Load file******
+
+def initial_load_students
+  filename = ARGV.first # first argument from the command line
+  if filename.nil?
+    if File.exist?(@file)
+      load_students_csv
+    else # if it doesn't exist
+      puts "Sorry, #{filename} doesn't exist."
+      exit # quit the program - too drastic, needs to change!
+    end
   end
 end
+
+def load_students_csv
+  if File.exist?(@file)
+    @students = []
+    CSV.foreach(@file) do |row|
+      name = row[0]; cohort = row[1]
+      @students << { name: name, cohort: cohort.to_sym}
+      end # end do
+    puts "Loaded #{@students.count} from #{@file}"
+  else
+     puts "There was an error loading the file."
+  end
+end # end load_students_csv
 
 def add_to_students (name, cohort)
   @students << {name: name, cohort: cohort.to_sym} #, hobbies:[], country:"Not known", height_m: "Not known"
@@ -218,26 +233,9 @@ def save_students
   end
 end # end save_students
 
-def load_students_csv
-  @students = []
-  CSV.foreach(@file) do |row|
-    name = row[0]; cohort = row[1]
-    @students << { name: name, cohort: cohort.to_sym}
-    end # end do
-  puts "The current file is #{@file}."
-end # end load_students_csv
 
-def choose_file
-  puts "Please enter the name of the file you wish to use:"
-  filenew = gets.chomp.downcase
-  if File.exist?(filenew)
-    @file = filenew
-    load_students_csv
-    #puts "The current file is #{@file}."
-  else
-    puts "Sorry, I can't find that file."
-  end # end if
-end # end choose_file
+
+
 
 # *** Older methods not currently called ***
 # *** but kept for learning references ***
