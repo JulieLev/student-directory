@@ -16,6 +16,23 @@ def initial_load_students
   end
 end
 
+#********* Odds & Sods ********
+
+def input
+  STDIN.gets.chomp
+end
+
+def num_students
+  if @students.count == 1
+    puts "Now we have #{@students.count} student."
+  else
+    puts "Now we have #{@students.count} students."
+  end # end if
+end
+
+
+
+#*********** Menu *************
 def interactive_menu
   loop do
     print_menu
@@ -51,6 +68,7 @@ def menu_action(selection)
   end
 end
 
+#************* Link File ******************
 def show_link
   puts "You are currently linked to #{@file}."
 end
@@ -64,17 +82,26 @@ def check_link_user
   end
 end
 
-def input
-  STDIN.gets.chomp
+def choose_file
+  puts "Please enter the name of the file you wish to use:"
+  filenew = gets.chomp.downcase
+  if File.exist?(filenew)
+    @file = filenew
+    load_students_csv
+    puts "The current file is #{@file}."
+  else
+    puts "Sorry, I can't find that file."
+  end
 end
 
-def num_students
-  if @students.count == 1
-    puts "Now we have #{@students.count} student."
-  else
-    puts "Now we have #{@students.count} students."
-  end # end if
+def add_to_students (name, cohort)
+  @students << {name: name, cohort: cohort.to_sym} #, hobbies:[], country:"Not known", height_m: "Not known"  
 end
+
+def check_months
+
+end
+
 
 def input_students
   show_link
