@@ -7,7 +7,6 @@ def initial_load_students
   filename = ARGV.first # first argument from the command line
   if filename.nil?
     if File.exist?(@file)
-      filename = @file
       load_students_csv
       puts "Loaded #{@students.count} from #{@file}"
     else # if it doesn't exist
@@ -56,16 +55,25 @@ def show_link
   puts "You are currently linked to #{@file}."
 end
 
+def check_link_user
+  show_link
+  puts "Is this correct? Enter Y if so or N to change the file."
+  r = gets.chomp.upcase
+  if r == "N"
+    choose_file
+  end
+end
+
 def input
   STDIN.gets.chomp
 end
 
 def num_students
   if @students.count == 1
-      puts "Now we have #{@students.count} student."
-    else
-      puts "Now we have #{@students.count} students."
-    end # end if
+    puts "Now we have #{@students.count} student."
+  else
+    puts "Now we have #{@students.count} students."
+  end # end if
 end
 
 def input_students
@@ -81,8 +89,8 @@ def input_students
     while m == false
       puts "Which cohort does #{name} belong to? Please enter the month name."
       cohortlabel = input
-      months = %w[january february march april may june
-        july august september october november december]
+      months = %w([january february march april may june
+                  july august september october november december])
       # check for typos
       if months.include?(cohortlabel)
         m = true
@@ -97,22 +105,22 @@ def input_students
 
     cohortlabel = cohortlabel.to_sym
 
-    # add the student hash to the array (simple version for later exercises)
-    # @students << {name: name, cohort: cohortlabel, hobbies:[],
-      # country:"Not known", height_m: "Not known"}
-    @students << { name: name, cohort: cohortlabel}
+# add the student hash to the array (simple version for later exercises)
+# @students << {name: name, cohort: cohortlabel, hobbies:[]
+# country: "Not known", height_m: "Not known"}
+    @students << { name: name, cohort: cohortlabel }
     num_students
     puts "Please enter the name of the next student or hit Return twice to finish."
     # get another name from the user
-    name = input  # gets.gsub(/\n/,”")
+    name = input # gets.gsub(/\n/,”")
   end # end first while
 
   puts "Would you like to save these students to the file now? Please enter Y or N."
   r = gets.chomp.upcase
-  if r == "Y"
-    save_students
-  else
+  if r == "N"
     puts "The students were not saved to the file."
+  else
+    save_students
   end
 end
 
@@ -162,13 +170,9 @@ def save_students
     puts "There are no outstanding students to add."
     return
   end
-  # open the file for writing
-  show_link
-  puts "Is this correct? Enter Y if so or N to change the file."
-  r = gets.chomp.upcase
-  if r == "N"
-    choose_file
-  end
+
+  check_link_user
+
   File.open(@file, "a") do |file|
     @students.each do |student|
     #csv << [student[:name], student[:cohort]]
@@ -205,7 +209,6 @@ def choose_file
     puts "Sorry, I can't find that file."
   end
 end
-
 
 # *** Older methods not currently called ***
 # *** but kept for learning references ***
