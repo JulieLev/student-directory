@@ -57,7 +57,7 @@ def show_link
 end
 
 def input
-  STDIN.gets.chomp 
+  STDIN.gets.chomp
 end
 
 def num_students
@@ -169,10 +169,9 @@ def save_students
   if r == "N"
     choose_file
   end
-
-  File.open(@file, "w") do |file|
-    # iterate over the array of students
+  File.open(@file, "a") do |file|
     @students.each do |student|
+    #csv << [student[:name], student[:cohort]]
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
