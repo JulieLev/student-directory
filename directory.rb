@@ -55,7 +55,8 @@ def menu_action(selection)
   end
 end
 
-#************* Link File ******************
+#********** Link File **********
+
 def show_link
   puts "You are currently linked to #{@file}."
 end
@@ -82,7 +83,7 @@ def choose_file
 end # end choose_file
 
 
-#******** Load file******
+#********** Load File **********
 
 def initial_load_students
   filename = ARGV.first # first argument from the command line
@@ -114,27 +115,7 @@ def add_to_students (name, cohort)
   @students << {name: name, cohort: cohort.to_sym} #, hobbies:[], country:"Not known", height_m: "Not known"
 end
 
-def input_cohort name
-  m = false
-  while m == false
-    puts "Which cohort does #{name} belong to? Please enter the month name."
-    cohortlabel = input
-    months = %w[january february march april may june
-                july august september october november december]
-    # check for typos
-    if months.include?(cohortlabel)
-      m = true
-    # check if empty
-    elsif cohortlabel.empty?
-      cohortlabel = "Unknown"
-      m = true
-    else
-      puts "Please enter a valid month:"
-      #m = false # m should still = false, just double checking for now!
-    end # end if
-  end # end while
-cohortlabel.to_sym
-end
+#********** Input and save new students **********
 
 def input_students
   show_link
@@ -160,6 +141,28 @@ def input_students
 check_if_save
 end # end input_students
 
+def input_cohort name
+  m = false
+  while m == false
+    puts "Which cohort does #{name} belong to? Please enter the month name."
+    cohortlabel = input
+    months = %w[january february march april may june
+                july august september october november december]
+    # check for typos
+    if months.include?(cohortlabel)
+      m = true
+    # check if empty
+    elsif cohortlabel.empty?
+      cohortlabel = "Unknown"
+      m = true
+    else
+      puts "Please enter a valid month:"
+      #m = false # m should still = false, just double checking for now!
+    end # end if
+  end # end while
+cohortlabel.to_sym
+end
+
 def check_if_save
   puts "Would you like to save these students to the file now?" 
   r = yes_or_no
@@ -169,6 +172,33 @@ def check_if_save
     save_students
   end
 end
+
+def save_students
+  if @students.empty?
+    puts "There are no outstanding students to add."
+    return
+  end
+
+  check_link_user
+
+  File.open(@file, "a") do |file|
+    @students.each do |student|
+    #csv << [student[:name], student[:cohort]]
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+    end # end student do
+  end # file open do
+
+  if File.exist?(@file)
+    puts "The students have been saved to the file #{@file}."
+  else
+    "The save was not successful - the file does not exist."
+  end
+end # end save_students
+
+
+#********** Display students **********
 
 def show_students
   print_header
@@ -211,29 +241,6 @@ def print_footer
   puts # spacer line
 end
 
-def save_students
-  if @students.empty?
-    puts "There are no outstanding students to add."
-    return
-  end
-
-  check_link_user
-
-  File.open(@file, "a") do |file|
-    @students.each do |student|
-    #csv << [student[:name], student[:cohort]]
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
-    end # end student do
-  end # file open do
-
-  if File.exist?(@file)
-    puts "The students have been saved to the file #{@file}."
-  else
-    "The save was not successful - the file does not exist."
-  end
-end # end save_students
 
 
 
