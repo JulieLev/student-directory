@@ -1,6 +1,7 @@
 require 'csv'
 
 @students = [] # an empty array accessible to all methods
+@students_new = []
 @file = "students.csv" # default name of the currently selected file
 
 #********* Odds & Sods ********
@@ -10,10 +11,10 @@ def input
 end
 
 def num_students
-  if @students.count == 1
-    puts "Now we have #{@students.count} student."
+  if @students_new.count == 1
+    puts "Now we have #{@students_new.count} student."
   else
-    puts "Now we have #{@students.count} students."
+    puts "Now we have #{@students_new.count} students."
   end # end if
 end
 
@@ -111,6 +112,7 @@ def load_students_csv
   puts #spacer row 
 end # end load_students_csv
 
+# this one not currently being used *****
 def add_to_students (name, cohort)
   @students << {name: name, cohort: cohort.to_sym} #, hobbies:[], country:"Not known", height_m: "Not known"
 end
@@ -118,6 +120,7 @@ end
 #********** Input and save new students **********
 
 def input_students
+  @students_new = []
   show_link
   puts "Please enter the names of the new students:"
   puts "To finish, or to cancel and change the file first, just hit return twice."
@@ -132,7 +135,7 @@ def input_students
 # @students << {name: name, cohort: cohortlabel, hobbies:[]
 # country: "Not known", height_m: "Not known"}
 
-    @students << { name: name, cohort: cohortlabel }
+    @students_new << { name: name, cohort: cohortlabel }
     num_students
     puts "Please enter the name of the next student or hit Return twice to finish."
     # get another name from the user
@@ -174,22 +177,19 @@ def check_if_save
 end
 
 def save_students
-  if @students.empty?
+  if @students_new.empty?
     puts "There are no outstanding students to add."
     return
   end
-
+  
   check_link_user
 
-  File.open(@file, "a") do |file|
-    @students.each do |student|
-    #csv << [student[:name], student[:cohort]]
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  CSV.open(@file, "a") do |csv|
+    @students_new.each do |student|
+      csv << [student[:name], student[:cohort]]
     end # end student do
-  end # file open do
-
+   end # end csv open   
+ 
   if File.exist?(@file)
     puts "The students have been saved to the file #{@file}."
   else
@@ -212,6 +212,8 @@ def print_header
 end
 
 def print_students_list
+  load_students_csv
+  
   count = @students.count
   if count == 0
     puts "There are no students to print.".center(40)
